@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -D warnings
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-features --all-targets
+      - run: cargo clippy -p even-better-auth --no-default-features --all-targets
+
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: pw
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: pw
+          MYSQL_DATABASE: ba
+        ports: ["3306:3306"]
+        options: --health-cmd "mysqladmin ping -ppw" --health-interval 5s --health-timeout 5s --health-retries 20
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL_POSTGRES: postgres://postgres:pw@127.0.0.1:5432/postgres
+      DATABASE_URL_MYSQL: mysql://root:pw@127.0.0.1:3306/ba
+      REDIS_URL: redis://127.0.0.1:6379/
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo test --workspace --all-features
+      - run: cargo test -p even-better-auth --no-default-features
+
+  js-client:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e/js-client/package-lock.json
+      - run: npm ci
+        working-directory: e2e/js-client
+      - run: ./e2e/js-client/run.sh
+      - name: Verify Rust-signed JWS with jose
+        run: |
+          JWS_OUT="$RUNNER_TEMP/jws.json" cargo test -p even-better-auth --test js_compat -- --ignored write_rust_jws_vectors
+          node e2e/js-client/verify-jws.mjs "$RUNNER_TEMP/jws.json"

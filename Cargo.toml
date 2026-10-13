@@ -1,0 +1,64 @@
+[workspace]
+resolver = "3"
+members = ["crates/*", "examples/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+rust-version = "1.99"
+repository = "https://github.com/Status-Labs/even-better-auth"
+
+[workspace.dependencies]
+even-better-auth = { path = "crates/even-better-auth" }
+even-better-auth-axum = { path = "crates/even-better-auth-axum" }
+even-better-auth-sqlx = { path = "crates/even-better-auth-sqlx" }
+even-better-auth-redis = { path = "crates/even-better-auth-redis" }
+async-trait = "0.1"
+axum = "0.8"
+base64 = "0.23"
+bytes = "1"
+chacha20poly1305 = "0.11"
+chrono = { version = "0.4", default-features = false, features = ["std", "clock", "serde"] }
+futures = "0.3"
+hex = "0.4"
+hkdf = "0.13"
+hmac = "0.13"
+http = "1"
+jsonwebtoken = { version = "11", features = ["rust_crypto"] }
+percent-encoding = "2"
+rand = "0.10"
+reqwest = { version = "0.13", default-features = false, features = ["json", "form", "query", "rustls", "http2", "charset"] }
+scrypt = { version = "0.12", default-features = false }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+serde_urlencoded = "0.7"
+sha1 = "0.11"
+sha2 = "0.11"
+sha3 = "0.12"
+sqlx = { version = "0.9", default-features = false, features = ["runtime-tokio", "chrono", "json"] }
+subtle = "2"
+thiserror = "2"
+tokio = { version = "1", features = ["full"] }
+tower = "0.5"
+tracing = "0.1"
+unicode-normalization = "0.1"
+url = "2"
+aes = "0.9"
+cbc = { version = "0.2", features = ["alloc"] }
+ed25519-dalek = { version = "3", features = ["rand_core", "pkcs8", "pem"] }
+p256 = { version = "0.14", features = ["ecdsa", "pkcs8", "pem"] }
+p384 = { version = "0.14", features = ["ecdsa", "pkcs8", "pem"] }
+p521 = { version = "0.14", features = ["ecdsa", "pkcs8", "pem"] }
+rsa = { version = "0.9", features = ["sha2", "pem", "getrandom"] }
+
+# Full debug info made `target/` grow to tens of GB; line tables keep usable backtraces.
+[profile.dev]
+debug = "line-tables-only"
+
+# Password hashing (scrypt) is far too slow unoptimized; tests and debug servers hash a lot.
+[profile.dev.package]
+scrypt.opt-level = 3
+salsa20.opt-level = 3
+pbkdf2.opt-level = 3
+sha2.opt-level = 3

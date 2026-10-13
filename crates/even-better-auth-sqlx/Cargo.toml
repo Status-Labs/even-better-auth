@@ -1,0 +1,29 @@
+[package]
+name = "even-better-auth-sqlx"
+description = "SQL database adapter (SQLite, Postgres, MySQL) for even-better-auth"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[features]
+default = ["sqlite"]
+sqlite = ["sqlx/sqlite"]
+postgres = ["sqlx/postgres"]
+# `mysql-rsa` keeps MySQL 8 `caching_sha2_password` working over non-TLS connections.
+mysql = ["sqlx/mysql", "sqlx/mysql-rsa"]
+
+[dependencies]
+async-trait.workspace = true
+even-better-auth = { workspace = true }
+chrono.workspace = true
+serde_json.workspace = true
+sqlx.workspace = true
+tokio = { version = "1", features = ["sync"] }
+
+[dev-dependencies]
+futures.workspace = true
+even-better-auth = { workspace = true, features = ["testing"] }
+bytes.workspace = true
+http.workspace = true
+tokio.workspace = true

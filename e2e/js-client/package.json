@@ -1,0 +1,13 @@
+{
+  "name": "better-auth-rust-js-client-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Runs the official better-auth JS client against the Rust example server",
+  "dependencies": {
+    "@better-auth/api-key": "1.7.7",
+    "@better-auth/passkey": "1.7.7",
+    "@better-auth/utils": "0.4.2",
+    "better-auth": "1.7.7",
+    "jose": "6.2.12"
+  }
+}

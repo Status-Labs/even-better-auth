@@ -1,0 +1,14 @@
+[package]
+name = "axum-server-example"
+version.workspace = true
+edition.workspace = true
+publish = false
+
+[dependencies]
+axum.workspace = true
+even-better-auth = { workspace = true }
+even-better-auth-axum = { workspace = true }
+serde_json.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
