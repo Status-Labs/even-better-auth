@@ -121,6 +121,15 @@ REDIS_URL=redis://127.0.0.1:6379/ \
 cargo test --workspace --all-features
 ```
 
+## How this was built
+
+Most of the code was written with an AI coding assistant (Claude), directed and reviewed by
+the maintainers. Nothing was taken on trust: behaviour is ported from better-auth 1.7.7 and
+checked against it by 300+ tests, by the official `better-auth` JS client driving a Rust server
+end to end, by CI on SQLite, Postgres, MySQL and Redis, and by crypto vectors from
+`node:crypto`, `@noble/ciphers` and `jose`. It has not been independently audited, which is why
+reviews are welcome; see [THREAT_MODEL.md](THREAT_MODEL.md).
+
 ## Status
 
 The core library and all built-in TypeScript plugins are ported. The separately published packages are next.
