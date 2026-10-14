@@ -244,15 +244,15 @@ async fn run_api_keys(auth: &BetterAuth, cookie: &str) {
     let results = futures::future::join_all((0..8).map(|_| call("verifyApiKey", json!({ "key": key })))).await;
     assert_eq!(results.iter().filter(|r| r["valid"] == true).count(), 3, "{results:?}");
 
-    // Refill after the interval.
+    // Refill after the interval (wide enough that a slow first request cannot cross it).
     let key = call(
         "createApiKey",
-        json!({ "userId": user_id, "remaining": 1, "refillAmount": 2, "refillInterval": 50, "rateLimitEnabled": false }),
+        json!({ "userId": user_id, "remaining": 1, "refillAmount": 2, "refillInterval": 1000, "rateLimitEnabled": false }),
     )
     .await;
     let key = key["key"].as_str().unwrap().to_owned();
     assert_eq!(call("verifyApiKey", json!({ "key": key })).await["key"]["remaining"], 0);
-    tokio::time::sleep(std::time::Duration::from_millis(80)).await;
+    tokio::time::sleep(std::time::Duration::from_millis(1100)).await;
     let res = call("verifyApiKey", json!({ "key": key })).await;
     assert_eq!(res["key"]["remaining"], 1, "{res}");
 

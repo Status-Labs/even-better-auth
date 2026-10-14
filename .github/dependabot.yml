@@ -11,6 +11,10 @@ updates:
     directory: /e2e/js-client
     schedule:
       interval: weekly
+    # The e2e pins the better-auth release the port targets; bump these together with a port.
+    ignore:
+      - dependency-name: "better-auth"
+      - dependency-name: "@better-auth/*"
     groups:
       npm:
         patterns: ["*"]

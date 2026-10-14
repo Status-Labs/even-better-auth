@@ -119,12 +119,12 @@ async fn quotas_refills_and_rate_limits() {
     let refilling = server(
         &c,
         "createApiKey",
-        json!({ "userId": uid, "remaining": 1, "refillAmount": 5, "refillInterval": 50, "rateLimitEnabled": false }),
+        json!({ "userId": uid, "remaining": 1, "refillAmount": 5, "refillInterval": 1000, "rateLimitEnabled": false }),
     )
     .await;
     let key = refilling["key"].as_str().unwrap();
     assert_eq!(verify(&c, key).await["key"]["remaining"], 0);
-    tokio::time::sleep(Duration::from_millis(80)).await;
+    tokio::time::sleep(Duration::from_millis(1100)).await;
     let res = verify(&c, key).await;
     assert_eq!(res["key"]["remaining"], 4, "{res}");
     assert!(res["key"]["lastRefillAt"].is_string());
