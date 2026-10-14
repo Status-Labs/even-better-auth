@@ -21,7 +21,7 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: Swatinem/rust-cache@v2
       - run: cargo fmt --all --check
       - run: cargo clippy --workspace --all-features --all-targets
@@ -30,7 +30,7 @@ jobs:
   deny:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: EmbarkStudios/cargo-deny-action@v2
 
   test:
@@ -58,7 +58,7 @@ jobs:
       DATABASE_URL_MYSQL: mysql://root:pw@127.0.0.1:3306/ba
       REDIS_URL: redis://127.0.0.1:6379/
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: Swatinem/rust-cache@v2
       - run: cargo test --workspace --all-features
       - run: cargo test -p even-better-auth --no-default-features
@@ -66,7 +66,7 @@ jobs:
   js-client:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: Swatinem/rust-cache@v2
       - uses: actions/setup-node@v7
         with:
