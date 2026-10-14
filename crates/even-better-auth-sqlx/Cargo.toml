@@ -7,7 +7,7 @@ license.workspace = true
 rust-version.workspace = true
 repository.workspace = true
 homepage.workspace = true
-readme.workspace = true
+readme = "README.md"
 keywords = ["auth", "better-auth", "sqlx", "postgres", "mysql"]
 categories = ["authentication", "database"]
 

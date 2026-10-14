@@ -9,7 +9,6 @@ license = "MIT"
 rust-version = "1.99"
 repository = "https://github.com/Status-Labs/even-better-auth"
 homepage = "https://github.com/Status-Labs/even-better-auth"
-readme = "README.md"
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
