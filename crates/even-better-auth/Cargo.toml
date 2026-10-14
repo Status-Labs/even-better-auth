@@ -5,6 +5,11 @@ version.workspace = true
 edition.workspace = true
 license.workspace = true
 rust-version.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme.workspace = true
+keywords = ["auth", "authentication", "better-auth", "oauth", "passkey"]
+categories = ["authentication", "web-programming::http-server"]
 
 [features]
 default = ["oauth"]
