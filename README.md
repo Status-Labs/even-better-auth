@@ -1,8 +1,15 @@
 # even better auth
 
+[![CI](https://github.com/Status-Labs/even-better-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/Status-Labs/even-better-auth/actions/workflows/ci.yml)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Status-Labs/even-better-auth/badge)](https://scorecard.dev/viewer/?uri=github.com/Status-Labs/even-better-auth)
+
 > [!WARNING]
 > Pre-1.0 and not yet security-reviewed. APIs will change, and it should not protect production
 > data yet. Report vulnerabilities privately; see [SECURITY.md](SECURITY.md).
+>
+> **Reviewers wanted.** If you know auth, OAuth/OIDC, WebAuthn or Rust crypto, an hour spent on
+> one area of [THREAT_MODEL.md](THREAT_MODEL.md#where-review-helps-most) helps a lot. Findings
+> go through private vulnerability reporting and are credited in the advisory.
 
 A Rust port of [better-auth](https://better-auth.com) (MIT; see [LICENSE](LICENSE)): a framework-agnostic authentication
 library. The server speaks the same HTTP protocol as the TypeScript version: the same paths

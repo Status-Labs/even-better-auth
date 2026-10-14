@@ -9,11 +9,14 @@ license = "MIT"
 rust-version = "1.99"
 repository = "https://github.com/Status-Labs/even-better-auth"
 
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
 [workspace.dependencies]
-even-better-auth = { path = "crates/even-better-auth" }
-even-better-auth-axum = { path = "crates/even-better-auth-axum" }
-even-better-auth-sqlx = { path = "crates/even-better-auth-sqlx" }
-even-better-auth-redis = { path = "crates/even-better-auth-redis" }
+even-better-auth = { path = "crates/even-better-auth", version = "0.1.0" }
+even-better-auth-axum = { path = "crates/even-better-auth-axum", version = "0.1.0" }
+even-better-auth-sqlx = { path = "crates/even-better-auth-sqlx", version = "0.1.0" }
+even-better-auth-redis = { path = "crates/even-better-auth-redis", version = "0.1.0" }
 async-trait = "0.1"
 axum = "0.8"
 base64 = "0.23"

@@ -282,21 +282,27 @@ impl PrivateKey {
     }
 }
 
+/// Every RSA private-key operation goes through the RNG so the `rsa` crate blinds it, which
+/// narrows the timing side channel of RUSTSEC-2023-0071 (PKCS#1 v1.5 signatures are
+/// deterministic, so the output is unchanged).
 fn rsa_sign(key: &rsa::RsaPrivateKey, alg: JwsAlgorithm, data: &[u8]) -> Result<Vec<u8>> {
     use rsa::sha2::{Sha256, Sha384, Sha512};
-    use rsa::signature::{RandomizedSigner, SignatureEncoding, Signer};
+    use rsa::signature::{RandomizedSigner, SignatureEncoding};
     let key = key.clone();
     let mut rng = rsa::rand_core::OsRng;
     Ok(match alg {
-        JwsAlgorithm::RS256 => {
-            rsa::pkcs1v15::SigningKey::<Sha256>::new(key).try_sign(data).map_err(crypto_err)?.to_vec()
-        }
-        JwsAlgorithm::RS384 => {
-            rsa::pkcs1v15::SigningKey::<Sha384>::new(key).try_sign(data).map_err(crypto_err)?.to_vec()
-        }
-        JwsAlgorithm::RS512 => {
-            rsa::pkcs1v15::SigningKey::<Sha512>::new(key).try_sign(data).map_err(crypto_err)?.to_vec()
-        }
+        JwsAlgorithm::RS256 => rsa::pkcs1v15::SigningKey::<Sha256>::new(key)
+            .try_sign_with_rng(&mut rng, data)
+            .map_err(crypto_err)?
+            .to_vec(),
+        JwsAlgorithm::RS384 => rsa::pkcs1v15::SigningKey::<Sha384>::new(key)
+            .try_sign_with_rng(&mut rng, data)
+            .map_err(crypto_err)?
+            .to_vec(),
+        JwsAlgorithm::RS512 => rsa::pkcs1v15::SigningKey::<Sha512>::new(key)
+            .try_sign_with_rng(&mut rng, data)
+            .map_err(crypto_err)?
+            .to_vec(),
         JwsAlgorithm::PS256 => rsa::pss::BlindedSigningKey::<Sha256>::new(key)
             .try_sign_with_rng(&mut rng, data)
             .map_err(crypto_err)?

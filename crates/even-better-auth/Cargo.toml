@@ -50,3 +50,6 @@ url.workspace = true
 [dev-dependencies]
 axum.workspace = true
 tokio.workspace = true
+
+[lints]
+workspace = true

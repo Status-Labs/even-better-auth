@@ -1,0 +1,41 @@
+# cargo-deny: run `cargo deny check` locally; CI runs it on every push.
+
+[graph]
+all-features = true
+
+[advisories]
+# Any RustSec advisory (vulnerability, unmaintained, unsound, yanked) fails the build.
+# Add an `ignore` entry with a reason only after assessing that it does not apply.
+ignore = [
+    # Marvin timing attack on RSA private-key operations; no fixed `rsa` release exists.
+    # We never decrypt with RSA. RSA signing is used only when the deployer picks an RS*/PS*
+    # JWT algorithm (the default is EdDSA) or an RSA private_key_jwt client assertion, and
+    # every signature is blinded (see `rsa_sign` in crypto/jose.rs). sqlx-mysql uses only the
+    # server's public key. Tracked in THREAT_MODEL.md.
+    { id = "RUSTSEC-2023-0071", reason = "signing only, blinded; no fix upstream" },
+]
+
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",
+    "ISC",
+    "Unicode-3.0",
+    "Zlib",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",
+]
+confidence-threshold = 0.9
+
+[bans]
+multiple-versions = "allow"
+wildcards = "deny"
+allow-wildcard-paths = true
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
