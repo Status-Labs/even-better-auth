@@ -201,7 +201,7 @@ mod tests {
     }
 
     fn id_token(sub: &str) -> String {
-        encode(&Header::default(), &json!({ "sub": sub }), &EncodingKey::from_secret(b"test-secret")).unwrap()
+        encode(&Header::default(), &json!({ "sub": sub }), &EncodingKey::from_secret(b"test-secret").unwrap()).unwrap()
     }
 
     #[tokio::test]

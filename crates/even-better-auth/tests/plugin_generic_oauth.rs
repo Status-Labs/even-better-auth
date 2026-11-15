@@ -35,7 +35,7 @@ type Shared = Arc<Mutex<Idp>>;
 fn sign(claims: Value) -> String {
     let mut header = jsonwebtoken::Header::new(jsonwebtoken::Algorithm::HS256);
     header.kid = Some("k1".into());
-    jsonwebtoken::encode(&header, &claims, &jsonwebtoken::EncodingKey::from_secret(KEY)).unwrap()
+    jsonwebtoken::encode(&header, &claims, &jsonwebtoken::EncodingKey::from_secret(KEY).unwrap()).unwrap()
 }
 
 async fn discovery(State(s): State<Shared>) -> Json<Value> {

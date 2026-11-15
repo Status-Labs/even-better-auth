@@ -16,7 +16,7 @@ fn token(claims: Value) -> String {
     jsonwebtoken::encode(
         &jsonwebtoken::Header::new(jsonwebtoken::Algorithm::HS256),
         &claims,
-        &jsonwebtoken::EncodingKey::from_secret(KEY),
+        &jsonwebtoken::EncodingKey::from_secret(KEY).unwrap(),
     )
     .unwrap()
 }
@@ -30,7 +30,8 @@ async fn setup(hd: Option<&str>, plugin: OneTapOptions) -> Client {
             let mut validation = jsonwebtoken::Validation::new(jsonwebtoken::Algorithm::HS256);
             validation.set_audience(&["google-client"]);
             validation.required_spec_claims.clear();
-            jsonwebtoken::decode::<Value>(&token, &jsonwebtoken::DecodingKey::from_secret(KEY), &validation).is_ok()
+            jsonwebtoken::decode::<Value>(&token, &jsonwebtoken::DecodingKey::from_secret(KEY).unwrap(), &validation)
+                .is_ok()
         })
     }));
     let mut google = Google::new(provider);

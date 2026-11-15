@@ -590,7 +590,7 @@ fn id_token(sub: &str, email: &str, verified: bool) -> String {
                         "email_verified": verified, "name": "Token User", "iat": now, "exp": now + 300});
     let mut header = Header::new(Algorithm::HS256);
     header.kid = Some("mock".into());
-    encode(&header, &claims, &EncodingKey::from_secret(JWT_KEY)).unwrap()
+    encode(&header, &claims, &EncodingKey::from_secret(JWT_KEY).unwrap()).unwrap()
 }
 
 #[tokio::test]

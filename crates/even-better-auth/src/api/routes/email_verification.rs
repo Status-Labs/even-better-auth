@@ -280,7 +280,8 @@ fn decode_verification_jwt(token: &str, secret: &str) -> Result<VerifyEmailClaim
     let mut validation = Validation::new(Algorithm::HS256);
     validation.required_spec_claims.clear();
     validation.leeway = 0;
-    match decode::<Map<String, Value>>(token, &DecodingKey::from_secret(secret.as_bytes()), &validation) {
+    let key = DecodingKey::from_secret(secret.as_bytes()).map_err(|_| codes::INVALID_TOKEN)?;
+    match decode::<Map<String, Value>>(token, &key, &validation) {
         Ok(data) => serde_json::from_value(Value::Object(data.claims))
             .ok()
             .filter(|c: &VerifyEmailClaims| super::util::is_valid_email(&c.email))

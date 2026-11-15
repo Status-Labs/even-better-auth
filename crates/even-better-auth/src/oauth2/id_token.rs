@@ -261,7 +261,7 @@ mod tests {
     fn token(claims: Value, kid: Option<&str>) -> String {
         let mut header = Header::new(Algorithm::HS256);
         header.kid = kid.map(str::to_owned);
-        encode(&header, &claims, &EncodingKey::from_secret(SECRET)).unwrap()
+        encode(&header, &claims, &EncodingKey::from_secret(SECRET).unwrap()).unwrap()
     }
 
     fn claims() -> Value {
@@ -297,7 +297,8 @@ mod tests {
         let mut bad = claims();
         bad.as_object_mut().unwrap().remove("aud");
         assert!(verify_jwt(&token(bad, Some("k1")), &config(), None).await.is_err());
-        let forged = encode(&Header::new(Algorithm::HS256), &claims(), &EncodingKey::from_secret(b"wrong")).unwrap();
+        let forged =
+            encode(&Header::new(Algorithm::HS256), &claims(), &EncodingKey::from_secret(b"wrong").unwrap()).unwrap();
         assert!(verify_jwt(&forged, &config(), None).await.is_err());
         let mut rs_only = config();
         rs_only.algorithms = vec![Algorithm::RS256];
